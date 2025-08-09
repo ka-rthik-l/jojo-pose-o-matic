@@ -1,0 +1,190 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* JoJo-themed color palette */
+    --background: 240 10% 8%;
+    --foreground: 45 100% 95%;
+
+    --card: 240 12% 12%;
+    --card-foreground: 45 100% 95%;
+
+    --popover: 240 12% 12%;
+    --popover-foreground: 45 100% 95%;
+
+    /* Golden primary inspired by JoJo's golden aura */
+    --primary: 45 100% 60%;
+    --primary-foreground: 240 10% 8%;
+
+    /* Deep purple secondary */
+    --secondary: 270 50% 25%;
+    --secondary-foreground: 45 100% 95%;
+
+    --muted: 240 8% 20%;
+    --muted-foreground: 45 20% 70%;
+
+    /* Crimson accent */
+    --accent: 0 80% 55%;
+    --accent-foreground: 45 100% 95%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 45 100% 95%;
+
+    --border: 240 15% 25%;
+    --input: 240 15% 25%;
+    --ring: 45 100% 60%;
+
+    --radius: 0.75rem;
+
+    /* JoJo-specific design tokens */
+    --jojo-gold: 45 100% 60%;
+    --jojo-purple: 270 50% 25%;
+    --jojo-crimson: 0 80% 55%;
+    --jojo-shadow: 240 50% 5%;
+    
+    /* Gradients */
+    --gradient-menacing: linear-gradient(135deg, hsl(var(--jojo-gold)), hsl(var(--jojo-crimson)));
+    --gradient-aura: linear-gradient(180deg, hsl(var(--jojo-purple)), hsl(var(--jojo-gold)));
+    --gradient-background: radial-gradient(circle at center, hsl(var(--background)), hsl(var(--jojo-shadow)));
+    
+    /* Effects */
+    --shadow-menacing: 0 0 30px hsl(var(--jojo-gold) / 0.3), 0 0 60px hsl(var(--jojo-crimson) / 0.2);
+    --shadow-aura: 0 0 40px hsl(var(--jojo-purple) / 0.4);
+    --glow-text: 0 0 10px hsl(var(--jojo-gold) / 0.8);
+    
+    /* Animations */
+    --transition-menacing: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --animation-pulse: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+    --sidebar-background: 240 12% 12%;
+    --sidebar-foreground: 45 100% 95%;
+    --sidebar-primary: 45 100% 60%;
+    --sidebar-primary-foreground: 240 10% 8%;
+    --sidebar-accent: 270 50% 25%;
+    --sidebar-accent-foreground: 45 100% 95%;
+    --sidebar-border: 240 15% 25%;
+    --sidebar-ring: 45 100% 60%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-bold;
+    background: linear-gradient(135deg, hsl(280 30% 92%), hsl(var(--background)));
+    background-image: var(--gradient-background);
+    min-height: 100vh;
+  }
+  
+  /* JoJo-style text effects */
+  .text-menacing {
+    text-shadow: var(--glow-text);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .aura-effect {
+    box-shadow: var(--shadow-aura);
+    border: 2px solid hsl(var(--jojo-gold) / 0.3);
+  }
+  
+  .menacing-glow {
+    box-shadow: var(--shadow-menacing);
+    animation: var(--animation-pulse);
+  }
+  
+  /* Anime-style keyframes */
+  @keyframes menacing-pulse {
+    0%, 100% { 
+      transform: scale(1);
+      box-shadow: var(--shadow-menacing);
+    }
+    50% { 
+      transform: scale(1.02);
+      box-shadow: 0 0 50px hsl(var(--jojo-gold) / 0.5), 0 0 100px hsl(var(--jojo-crimson) / 0.3);
+    }
+  }
+  
+  @keyframes dramatic-entrance {
+    0% {
+      opacity: 0;
+      transform: scale(0.8) rotate(-5deg);
+    }
+    50% {
+      transform: scale(1.1) rotate(2deg);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-20px);
+    }
+  }
+  
+  .dramatic-entrance {
+    animation: dramatic-entrance 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: float 6s ease-in-out infinite 3s;
+  }
+}
