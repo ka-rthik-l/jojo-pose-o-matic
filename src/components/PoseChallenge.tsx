@@ -147,7 +147,7 @@ export const PoseChallenge: React.FC<PoseChallengeProps> = ({
     const initialize = async () => {
       setIsInitializing(true);
       setCurrentPose(JOJO_POSES[Math.floor(Math.random() * JOJO_POSES.length)]);
-      setTimeLeft(15);
+      setTimeLeft(60);
       setPoseDetected(false);
       setPoseHoldTimer(0);
       setIsPoseCorrect(false);
@@ -215,11 +215,9 @@ export const PoseChallenge: React.FC<PoseChallengeProps> = ({
     };
   }, [isActive, onPoseResults]);
 
-  // New useEffect hook to handle the Escape key press
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isShutdownScreenVisible) {
-        // Exit fullscreen if it's active before calling onClose
         if (document.fullscreenElement) {
           document.exitFullscreen();
         }
@@ -239,24 +237,26 @@ export const PoseChallenge: React.FC<PoseChallengeProps> = ({
     setPoseDetected(poseHoldTimer > POSE_HOLD_DURATION);
   }, [poseHoldTimer]);
 
-  // Combined timer and shutdown logic
+  const handleGiveUp = useCallback(() => {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    }
+    setIsShutdownScreenVisible(true);
+  }, []);
+
   useEffect(() => {
     if (!isActive || poseDetected) return;
     if (timeLeft <= 0) {
-      // Go fullscreen before showing the black screen
-      if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen().catch((err) => {
-          console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-        });
-      }
-      setIsShutdownScreenVisible(true);
+      handleGiveUp();
       return;
     }
     const timer = setInterval(() => {
       setTimeLeft((prev) => prev - 1);
     }, 1000);
     return () => clearInterval(timer);
-  }, [isActive, timeLeft, onComplete, poseDetected]);
+  }, [isActive, timeLeft, poseDetected, handleGiveUp]);
 
   useEffect(() => {
     if (poseDetected) {
@@ -268,17 +268,6 @@ export const PoseChallenge: React.FC<PoseChallengeProps> = ({
     }
   }, [poseDetected, onComplete]);
 
-  const handleGiveUp = () => {
-    // Go fullscreen before showing the black screen
-    if (document.documentElement.requestFullscreen) {
-      document.documentElement.requestFullscreen().catch((err) => {
-        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-      });
-    }
-    setIsShutdownScreenVisible(true);
-  };
-  
-  // Handler for the 'X' button to close the challenge
   const handleClose = () => {
     if (document.fullscreenElement) {
         document.exitFullscreen();
@@ -290,7 +279,22 @@ export const PoseChallenge: React.FC<PoseChallengeProps> = ({
 
   if (isShutdownScreenVisible) {
     return (
-      <div className="fixed inset-0 z-[100] bg-black">
+      <div className="fixed inset-0 z-[100] bg-black text-white flex flex-col items-center justify-center p-8 font-mono">
+        <style>{`
+          @keyframes blink {
+            50% { opacity: 0; }
+          }
+          .blinking-cursor::after {
+            content: '|';
+            animation: blink 1s step-start infinite;
+          }
+        `}</style>
+        <h1 className="text-sm md:text-md blinking-cursor">
+          ....
+        </h1>
+        <p className="absolute bottom-4 right-4 text-xs opacity-50">
+          Press ESC to exit
+        </p>
       </div>
     );
   }
