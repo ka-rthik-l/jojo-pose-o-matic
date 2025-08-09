@@ -52,16 +52,16 @@ frontend-npm run dev]
 For Software:
 
 # Screenshots (Add at least 3)
-![<img width="1900" height="905" alt="Screenshot 2025-08-09 172629 - Copy" src="https://github.com/user-attachments/assets/bb72373d-3559-4d02-9fed-281545d7e20f" />
-]
+!<img width="1900" height="905" alt="Screenshot 2025-08-09 172629 - Copy" src="https://github.com/user-attachments/assets/bb72373d-3559-4d02-9fed-281545d7e20f" />
+
 *Main Page Where We can Choose Whether it should be random or not *
 
-![<img width="1897" height="903" alt="Screenshot 2025-08-09 172757 - Copy" src="https://github.com/user-attachments/assets/f8ca0f57-1957-4573-8a66-379f25489167" />
-]
+!<img width="1897" height="903" alt="Screenshot 2025-08-09 172757 - Copy" src="https://github.com/user-attachments/assets/f8ca0f57-1957-4573-8a66-379f25489167" />
+
 shows the interface with camera where user interact
 
-![<img width="1862" height="832" alt="Screenshot 2025-08-09 172843" src="https://github.com/user-attachments/assets/eb6d3090-652e-4a5b-b425-248db120c8f5" />
-]
+!<img width="1862" height="832" alt="Screenshot 2025-08-09 172843" src="https://github.com/user-attachments/assets/eb6d3090-652e-4a5b-b425-248db120c8f5" />
+
 it shows the mapping
 
 
@@ -69,11 +69,11 @@ it shows the mapping
 ### Project Demo
 # Video
 [https://drive.google.com/drive/folders/1J038v1xFZAzc2oPr7Aq0pKk9Xtpc01Ja?usp=drive_link]
+
 These Videos cover all the Useless fuctions of this website. One being the Main menu, how the mapping works in order to read the movements and correctly guess the pose and in the worst case of if you didn't do the project in time the system shuts down completely( The system only acts in shutting down but actually doesn't ).
 
-# Additional Demos
-[Add any extra demo materials/links]
 
 ## Team Contributions
 - [Karthik L]: [Frontend,Mapping]
 - [Adarsh Subhash]: [Backend,Mapping]
+
