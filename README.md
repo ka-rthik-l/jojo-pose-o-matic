@@ -75,7 +75,9 @@ These Videos cover all the Useless fuctions of this website. One being the Main 
 
 ## Team Contributions
 Karthik L: Frontend,Mapping
+
 Adarsh Subhash: Backend,Mapping
+
 
 
 
