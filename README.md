@@ -1,73 +1,79 @@
-# Welcome to your Lovable project
+<img width="3188" height="1202" alt="frame (3)" src="https://github.com/user-attachments/assets/517ad8e9-ad22-457d-9538-a9e62d137cd7" />
 
-## Project info
 
-**URL**: https://lovable.dev/projects/5552d744-52d6-46f6-94bf-ba4885546d26
+# [JOJO POSE DETECTION CHALLENGE] 🎯
 
-## How can I edit this code?
 
-There are several ways of editing your application.
+## Basic Details
+### Team Name: [GROOVE]
 
-**Use Lovable**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/5552d744-52d6-46f6-94bf-ba4885546d26) and start prompting.
+### Team Members
+- Team Lead: [Karthik L] - [SOE,CUSAT]
+- Member 2: [Adarsh Subhash] - [SOE,CUSAT]
 
-Changes made via Lovable will be committed automatically to this repo.
 
-**Use your preferred IDE**
+### Project Description
+[App that scans your webcam feed to see how accurately you can recreate legendary JoJo’s Bizarre Adventure poses.Fail to impress, and you’ll have to face… the consequences.]
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### The Problem (that doesn't exist)
+[In today’s world, pranks are running wild and unregulated. Innocent bystanders are getting jump-scared, glitter-bombed, and Rickrolled without a fighting chance. Society needs a defense mechanism — a way to prove you’re worthy of being spared… preferably by striking a fabulous JoJo pose]
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### The Solution (that nobody asked for)
+[We built an AI JoJo Pose Detection system that scans your stance in real-time. Strike the correct JoJo pose, and you’re safe. Fail… and you instantly trigger the prank protocol. Your only defense is fabulousness."]
 
-Follow these steps:
+## Technical Details
+### Technologies/Components Used
+For Software:
+- [Python, JavaScript]
+- [Flask (for backend), TensorFlow Lite (for ML model), Bootstrap (for styling)]
+- [ OpenCV (for camera input), MediaPipe (for pose detection), NumPy (for calculations),]
+- [VS Code, GitHub, ,Lovable]
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+For Hardware:
+- [Laptop/PC, Webcam (built-in)]
+- [Minimum 4GB RAM, 2-core processor, HD webcam (720p+)]
+- [Internet connection, ]
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Implementation
+For Software:
+# Installation
+[# Clone the repository
+git clone https://github.com/ka-rthik-l/jojo-pose-o-matic
+cd jojo-pose-o-matic]
 
-# Step 3: Install the necessary dependencies.
-npm i
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
 
-**Edit a file directly in GitHub**
+# Run
+[backend-npm start
+frontend-npm run dev]
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Project Documentation
+For Software:
 
-**Use GitHub Codespaces**
+# Screenshots (Add at least 3)
+![<img width="1900" height="905" alt="Screenshot 2025-08-09 172629 - Copy" src="https://github.com/user-attachments/assets/bb72373d-3559-4d02-9fed-281545d7e20f" />
+]
+*Main Page Where We can Choose Whether it should be random or not *
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+![<img width="1897" height="903" alt="Screenshot 2025-08-09 172757 - Copy" src="https://github.com/user-attachments/assets/f8ca0f57-1957-4573-8a66-379f25489167" />
+]
+shows the interface with camera where user interact
 
-## What technologies are used for this project?
+![<img width="1862" height="832" alt="Screenshot 2025-08-09 172843" src="https://github.com/user-attachments/assets/eb6d3090-652e-4a5b-b425-248db120c8f5" />
+]
+it shows the mapping
 
-This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
 
-## How can I deploy this project?
+### Project Demo
+# Video
+[https://drive.google.com/drive/folders/1J038v1xFZAzc2oPr7Aq0pKk9Xtpc01Ja?usp=drive_link]
+These Videos cover all the Useless fuctions of this website. One being the Main menu, how the mapping works in order to read the movements and correctly guess the pose and in the worst case of if you didn't do the project in time the system shuts down completely( The system only acts in shutting down but actually doesn't ).
 
-Simply open [Lovable](https://lovable.dev/projects/5552d744-52d6-46f6-94bf-ba4885546d26) and click on Share -> Publish.
+# Additional Demos
+[Add any extra demo materials/links]
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+## Team Contributions
+- [Karthik L]: [Frontend,Mapping]
+- [Adarsh Subhash]: [Backend,Mapping]
