@@ -9,9 +9,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "express": "^5.1.0",
     "ws": "^8.18.3"
-  }
+  },
+  "devDependencies": {},
+  "description": ""
 }

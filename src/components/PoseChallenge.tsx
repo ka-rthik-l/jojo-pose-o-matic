@@ -69,13 +69,15 @@ export const PoseChallenge: React.FC<PoseChallengeProps> = ({
   onComplete,
   onClose,
 }) => {
-  const [timeLeft, setTimeLeft] = useState(200);
+  const [timeLeft, setTimeLeft] = useState(15);
   const [currentPose, setCurrentPose] = useState<PoseReference>();
   const [poseDetected, setPoseDetected] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
   const [isPoseCorrect, setIsPoseCorrect] = useState(false);
   const [poseHoldTimer, setPoseHoldTimer] = useState(0);
   const POSE_HOLD_DURATION = 30;
+
+  const [isShutdownScreenVisible, setIsShutdownScreenVisible] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -84,7 +86,6 @@ export const PoseChallenge: React.FC<PoseChallengeProps> = ({
   const streamRef = useRef<MediaStream | null>(null);
   const isMounted = useRef(false);
 
-  // Set the angle tolerance here. Increasing this value makes the pose easier to match.
   const ANGLE_TOLERANCE = 30;
 
   const checkPoseMatch = (landmarks: any[], targetPose: PoseReference): boolean => {
@@ -146,14 +147,19 @@ export const PoseChallenge: React.FC<PoseChallengeProps> = ({
     const initialize = async () => {
       setIsInitializing(true);
       setCurrentPose(JOJO_POSES[Math.floor(Math.random() * JOJO_POSES.length)]);
-      setTimeLeft(200);
+      setTimeLeft(15);
       setPoseDetected(false);
       setPoseHoldTimer(0);
       setIsPoseCorrect(false);
+      setIsShutdownScreenVisible(false);
 
       try {
         const video = videoRef.current;
-        if (!video) return;
+        if (!video) {
+          console.error('Video element not found. Aborting initialization.');
+          setIsInitializing(false);
+          return;
+        }
 
         const stream = await navigator.mediaDevices.getUserMedia({
           video: { width: 640, height: 480 },
@@ -209,110 +215,164 @@ export const PoseChallenge: React.FC<PoseChallengeProps> = ({
     };
   }, [isActive, onPoseResults]);
 
+  // New useEffect hook to handle the Escape key press
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isShutdownScreenVisible) {
+        // Exit fullscreen if it's active before calling onClose
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+        onClose();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isShutdownScreenVisible, onClose]);
+
   useEffect(() => {
     if (!isMounted.current) return;
     setPoseDetected(poseHoldTimer > POSE_HOLD_DURATION);
   }, [poseHoldTimer]);
 
+  // Combined timer and shutdown logic
   useEffect(() => {
-    if (!isActive || timeLeft <= 0 || poseDetected) return;
+    if (!isActive || poseDetected) return;
+    if (timeLeft <= 0) {
+      // Go fullscreen before showing the black screen
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch((err) => {
+          console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+        });
+      }
+      setIsShutdownScreenVisible(true);
+      return;
+    }
     const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          onComplete(false);
-          return 0;
-        }
-        return prev - 1;
-      });
+      setTimeLeft((prev) => prev - 1);
     }, 1000);
     return () => clearInterval(timer);
   }, [isActive, timeLeft, onComplete, poseDetected]);
 
   useEffect(() => {
     if (poseDetected) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
       const timeout = setTimeout(() => onComplete(true), 1000);
       return () => clearTimeout(timeout);
     }
   }, [poseDetected, onComplete]);
 
+  const handleGiveUp = () => {
+    // Go fullscreen before showing the black screen
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch((err) => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    }
+    setIsShutdownScreenVisible(true);
+  };
+  
+  // Handler for the 'X' button to close the challenge
+  const handleClose = () => {
+    if (document.fullscreenElement) {
+        document.exitFullscreen();
+    }
+    onClose();
+  };
+
   if (!isActive) return null;
 
+  if (isShutdownScreenVisible) {
+    return (
+      <div className="fixed inset-0 z-[100] bg-black">
+      </div>
+    );
+  }
+
   return (
-    <div className="fixed inset-0 z-50 bg-background/90 flex items-center justify-center">
-      <Card className="max-w-4xl w-full p-6">
-        <div className="flex justify-between items-center mb-4">
-          <Badge>
-            <Zap className="w-4 h-4 mr-1" /> JOJO CHALLENGE
-          </Badge>
-          <Button variant="ghost" onClick={onClose}>
-            <X />
-          </Button>
-        </div>
-
-        <h1 className="text-3xl font-bold">{currentPose?.name}</h1>
-        <p className="mb-4">{currentPose?.description}</p>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
-            {isInitializing ? (
-              <div className="flex items-center justify-center h-full text-white">
-                <Camera className="w-10 h-10 mr-2 animate-pulse" />
-                Initializing...
-              </div>
-            ) : (
-              <>
-                <video
-                  ref={videoRef}
-                  className="absolute w-full h-full object-cover transform scale-x-[-1]"
-                  autoPlay
-                  muted
-                  playsInline
-                />
-                <canvas
-                  ref={canvasRef}
-                  width={640}
-                  height={480}
-                  className="absolute w-full h-full"
-                />
-                <Badge
-                  className="absolute top-4 right-4"
-                  variant={isPoseCorrect ? 'default' : 'destructive'}
-                >
-                  {isPoseCorrect ? (
-                    <CircleCheck className="mr-1" />
-                  ) : (
-                    <CircleX className="mr-1" />
-                  )}
-                  {isPoseCorrect ? 'Pose Match' : 'No Match'}
-                </Badge>
-              </>
-            )}
-            {poseDetected && (
-              <div className="absolute inset-0 bg-primary/50 flex flex-col items-center justify-center text-white">
-                <CheckCircle className="w-12 h-12 mb-2 animate-bounce" />
-                <p className="text-2xl font-bold">POSE DETECTED!</p>
-              </div>
-            )}
+    <>
+      <div className="fixed inset-0 z-50 bg-background/90 flex items-center justify-center">
+        <Card className="max-w-4xl w-full p-6">
+          <div className="flex justify-between items-center mb-4">
+            <Badge>
+              <Zap className="w-4 h-4 mr-1" /> JOJO CHALLENGE
+            </Badge>
+            <Button variant="ghost" onClick={handleClose}>
+              <X />
+            </Button>
           </div>
-          <div>
-            <ul className="text-muted-foreground mb-4 space-y-2">
-              <li>• Position yourself in front of the camera</li>
-              <li>• Strike the {currentPose?.name} pose</li>
-              <li>• Hold the pose until detected</li>
-              <li>• Time left: {timeLeft}s</li>
-            </ul>
 
-            <div className="flex gap-4 mt-6">
-              <Button onClick={() => onComplete(false)} className="flex-1">
-                GIVE UP
-              </Button>
-              <Button onClick={() => onComplete(true)} className="flex-1">
-                FORCE SUCCESS
-              </Button>
+          <h1 className="text-3xl font-bold">{currentPose?.name}</h1>
+          <p className="mb-4">{currentPose?.description}</p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="relative aspect-video bg-black rounded-lg overflow-hidden">
+              {isInitializing ? (
+                <div className="flex items-center justify-center h-full text-white">
+                  <Camera className="w-10 h-10 mr-2 animate-pulse" />
+                  Initializing...
+                </div>
+              ) : (
+                <>
+                  <video
+                    ref={videoRef}
+                    className="absolute w-full h-full object-cover transform scale-x-[-1]"
+                    autoPlay
+                    muted
+                    playsInline
+                  />
+                  <canvas
+                    ref={canvasRef}
+                    width={640}
+                    height={480}
+                    className="absolute w-full h-full"
+                  />
+                  <Badge
+                    className="absolute top-4 right-4"
+                    variant={isPoseCorrect ? 'default' : 'destructive'}
+                  >
+                    {isPoseCorrect ? (
+                      <CircleCheck className="mr-1" />
+                    ) : (
+                      <CircleX className="mr-1" />
+                    )}
+                    {isPoseCorrect ? 'Pose Match' : 'No Match'}
+                  </Badge>
+                </>
+              )}
+              {poseDetected && (
+                <div className="absolute inset-0 bg-primary/50 flex flex-col items-center justify-center text-white">
+                  <CheckCircle className="w-12 h-12 mb-2 animate-bounce" />
+                  <p className="text-2xl font-bold">POSE DETECTED!</p>
+                </div>
+              )}
+            </div>
+            <div>
+              <ul className="text-muted-foreground mb-4 space-y-2">
+                <li>• Position yourself in front of the camera</li>
+                <li>• Strike the {currentPose?.name} pose</li>
+                <li>• Hold the pose until detected</li>
+                <li>• Time left: {timeLeft}s</li>
+              </ul>
+
+              <div className="flex gap-4 mt-6">
+                <Button onClick={handleGiveUp} className="flex-1">
+                  GIVE UP
+                </Button>
+                <Button onClick={() => onComplete(true)} className="flex-1">
+                  FORCE SUCCESS
+                </Button>
+              </div>
             </div>
           </div>
-        </div>
-      </Card>
-    </div>
+        </Card>
+      </div>
+    </>
   );
 };
